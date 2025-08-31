@@ -131,7 +131,7 @@ class HalogenTaskManager(HalogenModule):
 			TaskNamespace(namespace)
 		)
 
-		if func not in namespace.tasks.keys():
+		if func_name not in namespace.tasks.keys():
 			self.log(
 				chain,
 				"warning",

@@ -138,14 +138,20 @@ class HalogenPromptManager(HalogenModule):
 		)
 
 		prompt = self.make_prompt_parts()
-
 		prompt.append("\n[HALOGEN]")
-		msg = f"Completed task '{ev.namespace}::{ev.task_name}'. " \
-			f"Success = {ev.success}. Output = {ev.output}"
+
+
+		task_info = []
+		task_info.append(f"Completed task : {ev.name}")
+		for sub in ev.sub_tasks:
+			msg = f"Completed task '{sub.namespace}::{sub.func_name}' with args {sub.args}. " \
+				f"Success = {sub.success}. Output = {sub.output}"
+			task_info.append(msg)
 		
-		prompt.append(msg)
-		
-		
+		task_info_str = "\n".join(task_info)
+			
+		prompt.append(task_info_str)
+
 		str_prompt = "\n".join(prompt)
 
 		prompt_event = HalogenEvents.PromptEvent(
@@ -156,7 +162,7 @@ class HalogenPromptManager(HalogenModule):
 		)
 
 		self.print_prompt(prompt_event)
-		self.memory.add("halogen", msg)
+		self.memory.add("halogen", task_info_str)
 		self.emit_event(prompt_event)
 
 

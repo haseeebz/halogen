@@ -9,7 +9,7 @@ class ModelSubTask(BaseModel):
 
 
 class ModelTask(BaseModel):
-	task_name: str
+	name: str
 	sub_tasks: list[ModelSubTask]
 
 

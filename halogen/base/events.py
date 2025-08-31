@@ -197,7 +197,7 @@ class HalogenEvents():
 	class TaskEvent(Event):
 		"Start a new task."
 		name: str
-		sub_tasks: list[_SubTask]
+		sub_tasks: list["_SubTask"]
 
 
 	@dataclass(frozen= True)
@@ -212,7 +212,7 @@ class HalogenEvents():
 	class TaskCompletionEvent(Event):
 		"The result of a task."
 		name: str
-		sub_tasks: list[_SubTaskCompletion]
+		sub_tasks: list["_SubTaskCompletion"]
 
 
 	
