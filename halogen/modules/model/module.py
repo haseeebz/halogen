@@ -240,18 +240,16 @@ class HalogenModelManager(HalogenModule):
 		)
 		self.emit_event(ai_msg)
 
-		for task_group in response.tasks_groups:
-			for task in task_group.tasks:
-				task_ev = HalogenEvents.TaskEvent(
-					self.name(),
-					HalogenEvents.make_timestamp(),
-					chain,
-					task_group.name,
-					task.namespace,
-					task.task_name,
-					task.args
-				)
-				self.emit_event(task_ev)
+		for task in response.tasks:
+			sub = [HalogenEvents._SubTask(x.namespace, x.func_name, x.args) for x in task.sub_tasks]
+			ev = HalogenEvents.TaskEvent(
+				self.name(),
+				HalogenEvents.make_timestamp(),
+				chain,
+				task.name,
+				sub
+			)	
+			self.emit_event(ev)			
 
 
 

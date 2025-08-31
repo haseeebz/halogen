@@ -14,3 +14,6 @@ events.log
 test.py
 secrets.txt
 whiteboard.txt
+
+# ignoring these because they are prompt and continuously change
+*.txt

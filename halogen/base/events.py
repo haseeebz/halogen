@@ -190,7 +190,7 @@ class HalogenEvents():
 	@dataclass(frozen= True)
 	class _SubTask:
 		namespace: str
-		task_name: str
+		func_name: str
 		args: list[str]
 
 	@dataclass(frozen= True)
@@ -203,7 +203,7 @@ class HalogenEvents():
 	@dataclass(frozen= True)
 	class _SubTaskCompletion:
 		namespace: str
-		task_name: str
+		func_name: str
 		args: list[str]
 		success: bool
 		output: str

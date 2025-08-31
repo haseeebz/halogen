@@ -96,33 +96,53 @@ class HalogenTaskManager(HalogenModule):
 
 		self.emit_event(registered_ev)
 
-	
 
 	def exec_task(self, ev: HalogenEvents.TaskEvent):
+		completed_subs = []
+		for sub in ev.sub_tasks:
+			success, output = self.exec_subtask(sub.namespace, sub.func_name, sub.args, ev.chain)
+			completed_subs.append(
+				HalogenEvents._SubTaskCompletion(
+					sub.namespace, sub.func_name, sub.args, success, output
+				)
+			)
+
+		completed_ev = HalogenEvents.TaskCompletionEvent(
+			self.name(),
+			HalogenEvents.make_timestamp(),
+			HalogenEvents.chain(ev),
+			ev.name,
+			completed_subs
+		)
+
+		self.emit_event(completed_ev)
+
+
+	def exec_subtask(self, namespace: str, func_name: str, args: list[str], chain: Chain) -> (bool, str):
 
 		self.log(
-			HalogenEvents.chain(ev),
+			chain,
 			"info",
-			f"Executing task {ev.chain} {ev.namespace}::{ev.task_name} with args {ev.args}"
+			f"Executing sub task {chain} {namespace}::{func_name} with args {args}"
 		)
 		
 		namespace = self.namespaces.setdefault(
-			ev.namespace,
-			TaskNamespace(ev.namespace)
+			namespace,
+			TaskNamespace(namespace)
 		)
 
-		if ev.task_name not in namespace.tasks.keys():
+		if func not in namespace.tasks.keys():
 			self.log(
-				HalogenEvents.chain(ev),
+				chain,
 				"warning",
-				f"Task with name '{ev.task_name}' for namespace '{ev.namespace}' not found."
+				f"Function with name '{func_name}' for namespace '{namespace}' not found."
 			)
 			return
 
-		func = namespace.tasks[ev.task_name].func
+		func = namespace.tasks[func_name].func
 
 		try:
-			output = func(ev.chain, *ev.args)
+			output = func(chain, *args)
 			success = True
 		except HalogenTaskError as e:
 			output = f"Error: {str(e)}"
@@ -131,31 +151,19 @@ class HalogenTaskManager(HalogenModule):
 			output = f"Unexpected Error({e.__class__.__name__}): {str(e)}"
 			success = False
 
-		output_event = HalogenEvents.TaskCompletionEvent(
-			self.name(),
-			HalogenEvents.make_timestamp(),
-			HalogenEvents.chain(ev),
-			ev.task_group,
-			ev.namespace,
-			ev.task_name,
-			ev.args,
-			success,
-			output
-		)
-
-		self.emit_event(output_event)
-
 		self.log(
-			HalogenEvents.chain(ev),
+			chain,
 			"info",
-			f"Executed task {ev.chain} {ev.namespace}::{ev.task_name}. Success = {success}"
+			f"Executed task {chain} {namespace}::{func_name}. Success = {success}"
 		)
 
 		self.log(
-			HalogenEvents.chain(ev),
+			chain,
 			"debug" if success else "warning",
-			f"Executed task {ev.chain} {ev.namespace}::{ev.task_name} returned {output}"
+			f"Executed task {chain} {namespace}::{func_name} returned {output}"
 		)
+
+		return (success, output)
 
 
 	

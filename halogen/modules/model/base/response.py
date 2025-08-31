@@ -2,15 +2,14 @@ from typing import Any
 from pydantic import BaseModel
 
 
-
 class ModelSubTask(BaseModel):
 	namespace: str
-	task_name: str
+	func_name: str
 	args: list[str]
 
 
 class ModelTask(BaseModel):
-	name: str
+	task_name: str
 	sub_tasks: list[ModelSubTask]
 
 
