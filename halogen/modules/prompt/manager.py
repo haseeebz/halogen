@@ -67,7 +67,7 @@ class HalogenPromptManager(HalogenModule):
 				self.handle_notify_event(event)
 
 			case HalogenEvents.ToolRegisteredEvent():
-				self.tasks.add_tool(event)
+				self.tools.add_tool(event)
 
 			case HalogenEvents.TaskCompletionEvent():
 				self.handle_task_completion(event)

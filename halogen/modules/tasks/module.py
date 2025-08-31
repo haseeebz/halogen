@@ -61,14 +61,14 @@ class HalogenTaskManager(HalogenModule):
 
 		namespace = self.namespaces.setdefault(
 			ev.namespace,
-			TaskNamespace(ev.namespace)
+			ToolNamespace(ev.namespace)
 		)
 
-		if ev.task_name in namespace.tools.keys():
+		if ev.tool_name in namespace.tools.keys():
 			self.log(
 				HalogenEvents.chain(ev),
 				"warning",
-				f"Tool with name '{ev.task_name}' for namespace '{ev.namespace}' already registered"
+				f"Tool with name '{ev.tool_name}' for namespace '{ev.namespace}' already registered"
 			)
 			return
 		
@@ -84,7 +84,7 @@ class HalogenTaskManager(HalogenModule):
 		self.log(
 			HalogenEvents.chain(ev),
 			"info",
-			f"Registered tool {ev.namespace}::{ev.task_name}"
+			f"Registered tool {ev.namespace}::{ev.tool_name}."
 		)
 
 		registered_ev = HalogenEvents.ToolRegisteredEvent(
@@ -131,7 +131,7 @@ class HalogenTaskManager(HalogenModule):
 		
 		namespace = self.namespaces.setdefault(
 			namespace,
-			TaskNamespace(namespace)
+			ToolNamespace(namespace)
 		)
 
 		if func_name not in namespace.tools.keys():
@@ -142,7 +142,7 @@ class HalogenTaskManager(HalogenModule):
 			)
 			return
 
-		func = namespace.tool[func_name].func
+		func = namespace.tools[func_name].func
 
 		try:
 			output = func(chain, *args)

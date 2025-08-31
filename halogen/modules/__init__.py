@@ -1,7 +1,7 @@
 from .command.handler import HalogenCommandHandler
 from .logger.module   import HalogenLogModule
 from .model.module    import HalogenModelManager
-from .tasks.manager   import HalogenTaskManager
+from .tasks.module    import HalogenTaskManager
 from .prompt.manager  import HalogenPromptManager
 from .server.server   import HalogenServer
 
