@@ -45,10 +45,11 @@ Your output must include these three parts:
 - Summarize what happened, what was found, or the next action needed.  
 
 > tasks 
-- A list of task calls to execute.  
-- You may chain multiple calls in one output.
-- In case of multi-step tasks, you should do tasks one at a time. 
-- Only send multiple tasks at once, if they are either disconnected or you are sure they can be executed side by side without any effects. 
+- A list of task groups to execute.  
+- A task group can consist of multiple tasks.
+- Tasks in the same task group are executed and their results are compiled together before returning the 
+output to you.
+- For example, you might put creation of multiple files within the same directory in a single task group and put a long or completely unrelated task (like a weather call) in a different group.
 
 > extras 
 - Leave empty unless the prompt explicitly instructs you to add something here.
