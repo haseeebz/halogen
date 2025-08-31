@@ -20,14 +20,18 @@ class HalogenTaskManager(HalogenModule):
 		emit_event: Callable[[HalogenEvents.Event], None], 
 		config: HalogenConfig
 		) -> None:
-	
 		super().__init__(emit_event, config)
+
 		self.namespaces: dict[str, TaskNamespace] = {}
 		
 	
 	@classmethod
 	def name(cls) -> str:
 		return "tasks"
+
+	@classmethod
+	def info(cls) -> str:
+		return "Module for task management and execution."
 	
 
 	def start(self) -> None:
@@ -51,7 +55,6 @@ class HalogenTaskManager(HalogenModule):
 				self.register_task(event)
 			case HalogenEvents.TaskEvent():
 				self.exec_task(event)                                    
-
 
 
 	def register_task(self, ev: HalogenEvents.TaskRegisterEvent):
