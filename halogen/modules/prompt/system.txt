@@ -33,7 +33,7 @@ RESTRICTIONS:
 
 MESSAGE HANDLING:
 - If the section is [USER], it is direct input from the user.  
-- If the section is [HALOGEN], it contains task outputs and other system information — interpret and use it to continue the task. If you are to tell the user about this message, make sure it is in human readable form and is easy to understand for the user. Strip away any system level details.
+- If the section is [HALOGEN], it contains task outputs and other system information — interpret and use it to continue the task. If you are to tell the user about this message, make sure it is in human readable form and is easy  to understand for the user. Strip away any system level details.
 
 
 RESPONSE SCHEMA:

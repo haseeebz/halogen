@@ -8,12 +8,13 @@ __pycache__/
 *.pyc
 *.egg-info
 
+
+# ignoring these because they are prompt and continuously change
+*.txt
+
 # dev stuff
 halogen.log
 events.log
 test.py
 secrets.txt
 whiteboard.txt
-
-# ignoring these because they are prompt and continuously change
-*.txt
