@@ -170,19 +170,19 @@ class HalogenEvents():
 
 	
 	@dataclass(frozen= True)
-	class TaskRegisterEvent(Event):
+	class ToolRegisterEvent(Event):
 		"Event passed to task manager to register an new task."
 		namespace: str
-		task_name: str
+		tool_name: str
 		args_info: list[str]
 		info: str
 		func: Callable[[list[str], Chain], str]
 
 
 	@dataclass(frozen= True)
-	class TaskRegisteredEvent(Event):
+	class ToolRegisteredEvent(Event):
 		namespace: str
-		task_name: str
+		tool_name: str
 		args_info: list[str]
 		info: str
 

@@ -3,7 +3,7 @@ from typing import Tuple
 from pathlib import Path
 import os, shutil, re
 from halogen.base import HalogenEvents, HalogenModule, HalogenConfig
-from halogen.modules.tasks.base import HalogenTask, HalogenTaskError
+from halogen.modules.tasks.base import HalogenTool, HalogenTaskError
 
 
 
@@ -11,7 +11,7 @@ class FileSystem(HalogenModule):
 	
 	def __init__(self, emit_event: Callable[[HalogenEvents.Event], None], config: HalogenConfig) -> None:
 		super().__init__(emit_event, config)
-		self.has_tasks = True
+		self.has_tools = True
 
 
 	@classmethod
@@ -35,7 +35,7 @@ class FileSystem(HalogenModule):
 		return (True, "No specific end action needed.")
 	
 
-	@HalogenTask(
+	@HalogenTool(
 		"read_file", 
 		"Read the contents of a file.", 
 		["path:string", "lines:integar"]
@@ -54,7 +54,7 @@ class FileSystem(HalogenModule):
 		return "".join(content)
 
 	
-	@HalogenTask(
+	@HalogenTool(
 		"write_to_file", 
 		"Write content to a file.", 
 		["path:string", "content:string"]
@@ -72,7 +72,7 @@ class FileSystem(HalogenModule):
 		return f"Successfully written to {file_path}"
 
 	
-	@HalogenTask(
+	@HalogenTool(
 		"append_to_file", 
 		"Append content to a file.", 
 		["path:string", "content:string"]
@@ -90,7 +90,7 @@ class FileSystem(HalogenModule):
 		return f"Successfully appended to {file_path}"
 
 
-	@HalogenTask(
+	@HalogenTool(
 		"list_directory", 
 		"List the contents of a directory/folder.", 
 		["path:string"]
@@ -112,7 +112,7 @@ class FileSystem(HalogenModule):
 			return contents
 
 
-	@HalogenTask(
+	@HalogenTool(
 		"make_directory", 
 		"Creates a directory along with missing parents", 
 		["path:string"]
@@ -129,7 +129,7 @@ class FileSystem(HalogenModule):
 		return f"Created directory at {path}."
 
 
-	@HalogenTask(
+	@HalogenTool(
 		"remove_directory", 
 		"Deletes a directory recursively! Ask before executing.", 
 		["path:string"]
@@ -149,7 +149,7 @@ class FileSystem(HalogenModule):
 		return f"Removed directory at {path}."
 
 
-	@HalogenTask(
+	@HalogenTool(
 		"create_file", 
 		"Create a file at the specified location.", 
 		["path:string"]
@@ -166,7 +166,7 @@ class FileSystem(HalogenModule):
 		return f"Created file at {path}."
 
 
-	@HalogenTask(
+	@HalogenTool(
 		"remove_file", 
 		"Remove a file at the specified location.", 
 		["path:string"]
@@ -183,7 +183,7 @@ class FileSystem(HalogenModule):
 		return f"Removed file at {path}."
 
 
-	@HalogenTask(
+	@HalogenTool(
 		"search_file", 
 		"Search for a file within a given directory.", 
 		["name:string","directory:string"]
@@ -211,7 +211,7 @@ class FileSystem(HalogenModule):
 			return found
 
 
-	@HalogenTask(
+	@HalogenTool(
 		"regex_file_search",
 		"Search files within a directory by a given a regex pattern. The pattern arg must be valid regex.",
 		["directory:string", "pattern:string(valid regex)"]

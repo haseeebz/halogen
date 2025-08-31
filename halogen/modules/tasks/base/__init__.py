@@ -1,2 +1,2 @@
 from .error import HalogenTaskError
-from .deco import HalogenTask
+from .deco import HalogenTool

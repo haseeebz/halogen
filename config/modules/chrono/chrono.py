@@ -5,13 +5,13 @@ from concurrent.futures import ThreadPoolExecutor
 import time
 
 from halogen.base import HalogenEvents, HalogenModule, HalogenConfig
-from halogen.modules.tasks.base import HalogenTask, HalogenTaskError
+from halogen.modules.tasks.base import HalogenTool, HalogenTaskError
 
 class Chrono(HalogenModule):
 
 	def __init__(self, emit_event: Callable[[HalogenEvents.Event], None], config: HalogenConfig) -> None:
 		super().__init__(emit_event, config)
-		self.has_tasks = True
+		self.has_tools = True
 		self.executor = ThreadPoolExecutor()
 	
 	@classmethod
@@ -36,7 +36,7 @@ class Chrono(HalogenModule):
 		return (True, "Shutdown the ThreadPool and killed all timers.")
 
 
-	@HalogenTask(
+	@HalogenTool(
 		"set_duration_reminder", 
 		"Set a reminder (in integar seconds). Add detailed context to the message also.",
 		["message:string", "seconds:integar"]
@@ -65,7 +65,7 @@ class Chrono(HalogenModule):
 		return f"Set reminder to notify after {sec}s."
 
 
-	@HalogenTask(
+	@HalogenTool(
 		"set_time_reminder", 
 		"Set a time based reminder for today. Add context to the message also.",
 		["message:string", "hour:integar(0-23)", "minute:integar(0-59)"]

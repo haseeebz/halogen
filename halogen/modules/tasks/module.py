@@ -45,19 +45,19 @@ class HalogenTaskManager(HalogenModule):
 	def handled_events(self) -> list[type[HalogenEvents.Event]]:
 		return [
 			HalogenEvents.TaskEvent,
-			HalogenEvents.TaskRegisterEvent
+			HalogenEvents.ToolRegisterEvent
 		]
 	
 
 	def handle(self, event: HalogenEvents.Event) -> None:
 		match event:
-			case HalogenEvents.TaskRegisterEvent():
-				self.register_task(event)
+			case HalogenEvents.ToolRegisterEvent():
+				self.register_tool(event)
 			case HalogenEvents.TaskEvent():
 				self.exec_task(event)                                    
 
 
-	def register_task(self, ev: HalogenEvents.TaskRegisterEvent):
+	def register_tool(self, ev: HalogenEvents.ToolRegisterEvent):
 
 		namespace = self.namespaces.setdefault(
 			ev.namespace,
@@ -68,7 +68,7 @@ class HalogenTaskManager(HalogenModule):
 			self.log(
 				HalogenEvents.chain(ev),
 				"warning",
-				f"Task with name '{ev.task_name}' for namespace '{ev.namespace}' already registered"
+				f"Tool with name '{ev.task_name}' for namespace '{ev.namespace}' already registered"
 			)
 			return
 		
@@ -84,7 +84,7 @@ class HalogenTaskManager(HalogenModule):
 		self.log(
 			HalogenEvents.chain(ev),
 			"info",
-			f"Registered task {ev.namespace}::{ev.task_name}"
+			f"Registered tool {ev.namespace}::{ev.task_name}"
 		)
 
 		registered_ev = HalogenEvents.TaskRegisteredEvent(
@@ -126,7 +126,7 @@ class HalogenTaskManager(HalogenModule):
 		self.log(
 			chain,
 			"info",
-			f"Executing sub task {chain} {namespace}::{func_name} with args {args}"
+			f"Executing tool [subtask {chain}] {namespace}::{func_name} with args {args}."
 		)
 		
 		namespace = self.namespaces.setdefault(
@@ -138,7 +138,7 @@ class HalogenTaskManager(HalogenModule):
 			self.log(
 				chain,
 				"warning",
-				f"Function with name '{func_name}' for namespace '{namespace}' not found."
+				f"Tool with name '{func_name}' for namespace '{namespace}' not found."
 			)
 			return
 

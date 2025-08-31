@@ -5,7 +5,7 @@ from pathlib import Path
 import os
 
 from .sub_managers.memory import MemoryManager
-from .sub_managers.tasks import TasksManager
+from .sub_managers.tasks import ToolManager
 # TODO Make prompt manager more robust and modular cuz the current approach is literal duct tape
 
 
@@ -20,7 +20,7 @@ class HalogenPromptManager(HalogenModule):
 		
 		self.core_sections: list[str] = []
 		self.memory: MemoryManager = MemoryManager(self.config.get("memory_length", 50))
-		self.tasks: TasksManager = TasksManager()
+		self.tools: ToolManager = ToolManager()
 
 		self.log_file = Path(__file__).resolve().parent / "halogen.log"
 
@@ -48,7 +48,7 @@ class HalogenPromptManager(HalogenModule):
 			HalogenEvents.AIResponseEvent,
 			HalogenEvents.UserInputEvent,
 			HalogenEvents.NotifyEvent,
-			HalogenEvents.TaskRegisteredEvent,
+			HalogenEvents.ToolRegisteredEvent,
 			HalogenEvents.TaskEvent,
 			HalogenEvents.TaskCompletionEvent
 		]
@@ -66,8 +66,8 @@ class HalogenPromptManager(HalogenModule):
 			case HalogenEvents.NotifyEvent():
 				self.handle_notify_event(event)
 
-			case HalogenEvents.TaskRegisteredEvent():
-				self.tasks.add_task(event)
+			case HalogenEvents.ToolRegisteredEvent():
+				self.tasks.add_tool(event)
 
 			case HalogenEvents.TaskCompletionEvent():
 				self.handle_task_completion(event)
@@ -97,7 +97,7 @@ class HalogenPromptManager(HalogenModule):
 	def make_prompt_parts(self) -> list[str]:
 		parts = []
 		parts.extend(self.core_sections)
-		parts.append(self.tasks.stringify())
+		parts.append(self.tools.stringify())
 		parts.append(self.memory.stringify())
 		return parts
 

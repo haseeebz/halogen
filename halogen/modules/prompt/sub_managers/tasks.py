@@ -1,38 +1,38 @@
 from halogen.base import HalogenEvents
 
 
-task_intro = """
-[TASKS]
-All available tasks that you can do. These namespaces are modules and their defined tasks are given below. 
+tool_intro = """
+[TOOLS]
+All available tools that you can do. These namespaces are modules and their defined tools are given below. 
 These are the functions that you can execute.
 Make sure to follow the argument types indicated after the ':' and in python type hint format.
 
 """
 
 
-class TasksManager():
+class ToolManager():
 
 	def __init__(self):
-		self.task_map: dict[str, list[tuple[str, str, list[str]]]] = {}
-		self.task_string = ""
+		self.tool_map: dict[str, list[tuple[str, str, list[str]]]] = {}
+		self.tool_string = ""
 
-	def add_task(self, ev: HalogenEvents.TaskRegisteredEvent):
-		task_list = self.task_map.setdefault(ev.namespace, [])
-		data = (ev.task_name, ev.info, ev.args_info)
-		task_list.append(data)
-		self.make_task_section()
+	def add_tool(self, ev: HalogenEvents.ToolRegisteredEvent):
+		tool_list = self.tool_map.setdefault(ev.namespace, [])
+		data = (ev.tool_name, ev.info, ev.args_info)
+		tool_list.append(data)
+		self.make_tool_section()
 
-	def make_task_section(self):
+	def make_tool_section(self):
 
 		string = []
-		string.append(task_intro)
+		string.append(tool_intro)
 
-		for ns, taskslist in self.task_map.items():
-			string.append(f"\n> Namespace: '{ns}'\nDefined Tasks:")
-			for n, i, a in taskslist:
+		for ns, toolslist in self.tool_map.items():
+			string.append(f"\n> Namespace: '{ns}'\nDefined tools:")
+			for n, i, a in toolslist:
 				string.append(f"- name: '{n}'; args: ({a}); info: {i};")
 			
-		self.tasks_section_string = "\n".join(string)
+		self.tools_section_string = "\n".join(string)
 
 	def stringify(self) -> str:
-		return self.tasks_section_string
+		return self.tools_section_string

@@ -74,8 +74,8 @@ class HalogenModuleManager():
 		if module.has_commands:
 			self.handle_module_commands(module)
 
-		if module.has_tasks:
-			self.handle_module_tasks(module)
+		if module.has_tools:
+			self.handle_module_tools(module)
 
 		self.log(
 			HalogenEvents.chain(),
@@ -234,13 +234,13 @@ class HalogenModuleManager():
 			self.emit_event(ev)
 
 
-	def handle_module_tasks(self, module: HalogenModule):
+	def handle_module_tools(self, module: HalogenModule):
 
 		for name, mem in inspect.getmembers(module, inspect.ismethod):
-			if not hasattr(mem, "_is_task"):
+			if not hasattr(mem, "_is_tool"):
 				continue
 
-			ev = HalogenEvents.TaskRegisterEvent(
+			ev = HalogenEvents.ToolRegisterEvent(
 				module.name(),
 				HalogenEvents.make_timestamp(),
 				HalogenEvents.chain(),
