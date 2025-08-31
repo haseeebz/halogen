@@ -135,6 +135,7 @@ class HalogenTaskManager(HalogenModule):
 			self.name(),
 			HalogenEvents.make_timestamp(),
 			HalogenEvents.chain(ev),
+			ev.task_group,
 			ev.namespace,
 			ev.task_name,
 			ev.args,

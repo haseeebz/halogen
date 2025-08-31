@@ -3,15 +3,15 @@ from pydantic import BaseModel
 
 
 
-class ModelTask(BaseModel):
+class ModelSubTask(BaseModel):
 	namespace: str
 	task_name: str
 	args: list[str]
 
 
-class ModelTaskGroup(BaseModel):
+class ModelTask(BaseModel):
 	name: str
-	tasks: list[ModelTask]
+	sub_tasks: list[ModelSubTask]
 
 
 class ModelExtras(BaseModel):
@@ -22,5 +22,5 @@ class ModelExtras(BaseModel):
 class ModelResponse(BaseModel):
 	"Use this class if the model can be configured using schema directly."
 	message: str
-	tasks_groups: list[ModelTaskGroup]
+	tasks: list[ModelTask]
 	extras: list[ModelExtras]

@@ -188,21 +188,34 @@ class HalogenEvents():
 
 
 	@dataclass(frozen= True)
-	class TaskEvent(Event):
-		"Start a new task."
+	class _SubTask:
 		namespace: str
 		task_name: str
 		args: list[str]
 
+	@dataclass(frozen= True)
+	class TaskEvent(Event):
+		"Start a new task."
+		name: str
+		sub_tasks: list[_SubTask]
+
 
 	@dataclass(frozen= True)
-	class TaskCompletionEvent(Event):
-		"The result of a task."
+	class _SubTaskCompletion:
 		namespace: str
 		task_name: str
 		args: list[str]
 		success: bool
 		output: str
+
+	@dataclass(frozen= True)
+	class TaskCompletionEvent(Event):
+		"The result of a task."
+		name: str
+		sub_tasks: list[_SubTaskCompletion]
+
+
+	
 
 	
 	
