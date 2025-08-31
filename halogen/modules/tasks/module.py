@@ -9,7 +9,7 @@ from halogen.base import (
 	Chain
 )
 
-from .meta import TaskNamespace, TaskData
+from .meta import ToolNamespace, ToolData
 from .base import HalogenTaskError
 
 
@@ -22,7 +22,7 @@ class HalogenTaskManager(HalogenModule):
 		) -> None:
 		super().__init__(emit_event, config)
 
-		self.namespaces: dict[str, TaskNamespace] = {}
+		self.namespaces: dict[str, ToolNamespace] = {}
 		
 	
 	@classmethod
@@ -64,7 +64,7 @@ class HalogenTaskManager(HalogenModule):
 			TaskNamespace(ev.namespace)
 		)
 
-		if ev.task_name in namespace.tasks.keys():
+		if ev.task_name in namespace.tools.keys():
 			self.log(
 				HalogenEvents.chain(ev),
 				"warning",
@@ -72,14 +72,14 @@ class HalogenTaskManager(HalogenModule):
 			)
 			return
 		
-		task_data = TaskData(
-			ev.task_name,
+		tool_name = ToolData(
+			ev.tool_name,
 			ev.info,
 			ev.args_info,
 			ev.func
 		)
 
-		namespace.tasks[ev.task_name] = task_data
+		namespace.tools[ev.tool_name] = tool_name
 
 		self.log(
 			HalogenEvents.chain(ev),
@@ -87,12 +87,12 @@ class HalogenTaskManager(HalogenModule):
 			f"Registered tool {ev.namespace}::{ev.task_name}"
 		)
 
-		registered_ev = HalogenEvents.TaskRegisteredEvent(
+		registered_ev = HalogenEvents.ToolRegisteredEvent(
 			self.name(),
 			HalogenEvents.make_timestamp(),
 			HalogenEvents.chain(ev),
 			ev.namespace,
-			ev.task_name,
+			ev.tool_name,
 			ev.args_info,
 			ev.info
 		)
@@ -134,7 +134,7 @@ class HalogenTaskManager(HalogenModule):
 			TaskNamespace(namespace)
 		)
 
-		if func_name not in namespace.tasks.keys():
+		if func_name not in namespace.tools.keys():
 			self.log(
 				chain,
 				"warning",
@@ -142,7 +142,7 @@ class HalogenTaskManager(HalogenModule):
 			)
 			return
 
-		func = namespace.tasks[func_name].func
+		func = namespace.tool[func_name].func
 
 		try:
 			output = func(chain, *args)
@@ -157,13 +157,13 @@ class HalogenTaskManager(HalogenModule):
 		self.log(
 			chain,
 			"info",
-			f"Executed task {chain} {namespace}::{func_name}. Success = {success}"
+			f"Executed tool {chain} {namespace}::{func_name}. Success = {success}"
 		)
 
 		self.log(
 			chain,
 			"debug" if success else "warning",
-			f"Executed task {chain} {namespace}::{func_name} returned {output}"
+			f"Executed tool {chain} {namespace}::{func_name} returned {output}"
 		)
 
 		return (success, output)

@@ -3,14 +3,14 @@ from typing import Callable
 from halogen.base import Chain
 
 @dataclass
-class TaskData:
+class ToolData:
 	name: str
 	info: str
 	args: list[str]
 	func: Callable[[list[str], Chain], str]
 
 @dataclass 
-class TaskNamespace:
+class ToolNamespace:
 	module: str
-	tasks: dict[str, TaskData] = field(default_factory = dict)
+	tools: dict[str, ToolData] = field(default_factory = dict)
 	
