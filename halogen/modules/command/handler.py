@@ -75,7 +75,7 @@ class HalogenCommandHandler(HalogenModule):
 		
 		self.log(
 			HalogenEvents.chain(ev),
-			"info",
+			"debug",
 			f"Registered command: {ev.module}::{ev.cmd} Info : {ev.info}"
 		)
 

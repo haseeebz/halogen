@@ -83,7 +83,7 @@ class HalogenTaskManager(HalogenModule):
 
 		self.log(
 			HalogenEvents.chain(ev),
-			"info",
+			"debug",
 			f"Registered tool {ev.namespace}::{ev.tool_name}."
 		)
 
@@ -138,7 +138,7 @@ class HalogenTaskManager(HalogenModule):
 			self.log(
 				chain,
 				"warning",
-				f"Tool with name '{func_name}' for namespace '{namespace}' not found."
+				f"Tool with name '{func_name}' for namespace '{namespace.module}' not found."
 			)
 			return
 
@@ -151,19 +151,20 @@ class HalogenTaskManager(HalogenModule):
 			output = f"Error: {str(e)}"
 			success = False
 		except Exception as e:
-			output = f"Unexpected Error({e.__class__.__name__}): {str(e)}"
+			output = f"Unexpected Error({e.__class__.__name__}): {str(e)} " \
+			"[This error was uncontrolled and should be immediatly informed to the user]."
 			success = False
 
 		self.log(
 			chain,
 			"info",
-			f"Executed tool {chain} {namespace}::{func_name}. Success = {success}"
+			f"Executed tool {chain} {namespace.module}::{func_name}. Success = {success}"
 		)
 
 		self.log(
 			chain,
 			"debug" if success else "warning",
-			f"Executed tool {chain} {namespace}::{func_name} returned {output}"
+			f"Executed tool {chain} {namespace.module}::{func_name} returned {output}"
 		)
 
 		return (success, output)
