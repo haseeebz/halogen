@@ -1,20 +1,25 @@
-from halogen.interface.model import ModelInterface
+from ..adapters.connection import HalogenConnection
+from halogen.adapters.reason import ReasoningAdapter
 
 class HalogenCore:
 
 	def __init__(self):
-		self.model = ModelInterface("python3 -m model")
-		self.model.start()
+		self.reasoning_adapter = ReasoningAdapter("python3 model/adapter.py")
+		self.reasoning_adapter.start()
 		self.loop()
 
 	def loop(self):
-		while True:
+		self.waiting = False
 
-			user_input = input("User: ")
-			self.model.send_input(user_input)
+		while self.reasoning_adapter.conn.is_alive():
 
-			while True:
-				res = self.model.get_response()
+			user_input = input()
+			self.reasoning_adapter.ask(user_input)
 
-				if res:
-					print(f"Bot: {res}")
+			msg = self.reasoning_adapter.get_response()
+
+			print(msg)
+
+		print("Connection ended...")
+
+
